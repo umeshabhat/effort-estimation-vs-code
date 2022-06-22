@@ -12,8 +12,9 @@ export class ExtensionPannel {
   private readonly _panel: vscode.WebviewPanel;
   private readonly _extensionUri: vscode.Uri;
   private _disposables: vscode.Disposable[] = [];
+  public _prediction: string | undefined;
 
-  public static createOrShow(extensionUri: vscode.Uri) {
+  public static createOrShow(extensionUri: vscode.Uri, prediction: string) {
     const column = vscode.window.activeTextEditor
       ? vscode.window.activeTextEditor.viewColumn
       : undefined;
@@ -21,7 +22,8 @@ export class ExtensionPannel {
     // If we already have a panel, show it.
     if (ExtensionPannel.currentPanel) {
       ExtensionPannel.currentPanel._panel.reveal(column);
-      ExtensionPannel.currentPanel._update();
+      ExtensionPannel.currentPanel._update(prediction);
+
       return;
     }
 
@@ -42,7 +44,7 @@ export class ExtensionPannel {
       }
     );
 
-    ExtensionPannel.currentPanel = new ExtensionPannel(panel, extensionUri);
+    ExtensionPannel.currentPanel = new ExtensionPannel(panel, extensionUri, prediction);
   }
 
   public static kill() {
@@ -50,16 +52,16 @@ export class ExtensionPannel {
     ExtensionPannel.currentPanel = undefined;
   }
 
-  public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
-    ExtensionPannel.currentPanel = new ExtensionPannel(panel, extensionUri);
+  public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, prediction: string) {
+    ExtensionPannel.currentPanel = new ExtensionPannel(panel, extensionUri, prediction);
   }
 
-  private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
+  private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri, prediction: string) {
     this._panel = panel;
     this._extensionUri = extensionUri;
 
     // Set the webview's initial html content
-    this._update();
+    this._update(prediction);
 
     // Listen for when the panel is disposed
     // This happens when the user closes the panel or when the panel is closed programatically
@@ -80,7 +82,8 @@ export class ExtensionPannel {
     }
   }
 
-  private async _update() {
+  private async _update(prediction: string) {
+    this._prediction = prediction;
     const webview = this._panel.webview;
 
     this._panel.webview.html = this._getHtmlForWebview(webview);
@@ -137,7 +140,6 @@ export class ExtensionPannel {
 					Use a content security policy to only allow loading images from https or from our extension directory,
 					and only allow scripts that have a specific nonce.
         -->
-        <meta http-equiv="Content-Security-Policy" content="img-src https: data:; script-src 'nonce-${nonce}';">
 		    <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="${stylesResetUri}" rel="stylesheet">
         <link href="${stylesMainUri}" rel="stylesheet">
@@ -152,7 +154,23 @@ export class ExtensionPannel {
           <h1 class="loader__title">0</h1>
           <h3 class="loader__metric">hours</h3>
         </div>
-        <script nonce="${nonce}" src="${controllerUri}">
+        <script>
+          console.log("prediction is ", ${this._prediction})
+          let title = /** @type {HTMLElement} */ (document.querySelector('.loader__title'));
+
+          let currentNumber = title.innerText;
+
+          setInterval(() => {
+            if (currentNumber < ${this._prediction}) {
+              currentNumber++;
+              title.innerText = currentNumber;
+            } else if (currentNumber > ${this._prediction}) {
+              currentNumber--;
+              title.innerText = currentNumber;
+            }
+          }, 1);
+
+        </script>
       </body>
       </html>`;
   }

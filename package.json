@@ -2,6 +2,10 @@
   "name": "effort-estimator",
   "displayName": "effort-estimator",
   "publisher": "IoanaChelaru",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ioanachelaru/effort-estimation-vs-code.git"
+  },
   "description": "",
   "version": "0.0.1",
   "engines": {

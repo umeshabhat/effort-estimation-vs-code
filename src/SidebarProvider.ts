@@ -1,12 +1,15 @@
 import * as vscode from "vscode";
 import { getNonce } from "./getNonce";
-import { readFileSync, writeFileSync, promises as fsPromises } from 'fs';
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
   _view?: vscode.WebviewView;
   _doc?: vscode.TextDocument;
+  _prediction: string = '';
 
   constructor(private readonly _extensionUri: vscode.Uri) {}
+
+
+  public getPrediction() { return this._prediction; }
 
   public resolveWebviewView(webviewView: vscode.WebviewView) {
     this._view = webviewView;
@@ -40,8 +43,10 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
           await vscode.commands.executeCommand(
             "effort-estimator.estimateEffort"
           );
-          vscode.window.showInformationMessage('Starting computing, this might take a few seconds ..');
 
+          this._prediction = data.text;
+
+          vscode.window.showInformationMessage('Starting computing, this might take a few seconds ..');
           break;
         }
       }

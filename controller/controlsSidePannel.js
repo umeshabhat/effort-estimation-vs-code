@@ -51,12 +51,35 @@
         return true;
     }
 
+    function httpGet(theUrl) {
+        let xmlHttpReq = new XMLHttpRequest();
+        xmlHttpReq.open("GET", theUrl, false);
+        xmlHttpReq.send(null);
+
+        return xmlHttpReq.responseText;
+      }
+
+    function generateUrl() {
+        let url = 'http://127.0.0.1:5000/effort-estimator?';
+
+        url = url.concat('&lenght=', arrayVars[0].value);
+        url = url.concat('&noEntities=', arrayVars[1].value);
+        url = url.concat('&noTransactions=', arrayVars[2].value);
+        url = url.concat('&adjPoints=', arrayVars[3].value);
+        url = url.concat('&nonAdjPoints=', arrayVars[4].value);
+
+        return url;
+      }
+
     function computeStats() {
         if (validateInputs() === true) {
+
+            const url = generateUrl();
+            const prediction = JSON.parse(httpGet(url)).predictedValue;
             
             vscode.postMessage({
                 command: 'onOpenPanel',
-                text: arrayVars.values.toString()
+                text: prediction
             });
 
         } else {

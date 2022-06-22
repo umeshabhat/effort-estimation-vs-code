@@ -14,14 +14,14 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand("effort-estimator.estimateEffort", () => {
-			ExtensionPannel.createOrShow(context.extensionUri);
+			ExtensionPannel.createOrShow(context.extensionUri, sidebarProvider.getPrediction());
 		})
 	);
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand("effort-estimator.refreshPannel", () => {
 			ExtensionPannel.kill();
-			ExtensionPannel.createOrShow(context.extensionUri);
+			ExtensionPannel.createOrShow(context.extensionUri, sidebarProvider.getPrediction());
 		})
 	);
 
