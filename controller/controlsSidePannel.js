@@ -14,13 +14,13 @@
     const fileInput = getElement('fileInput');
     fileInput.addEventListener("change", autofillInputs);
 
-    var lenght = getElement('lenght');
+    var length = getElement('length');
     var entities = getElement('entities');
     var transactions = getElement('transactions');
     var pointsAdj = getElement('pointsAdj');
     var pointsNonAdj = getElement('pointsNonAdj');
 
-    var arrayVars = new Array(lenght, entities, transactions, pointsAdj, pointsNonAdj);
+    var arrayVars = new Array(length, entities, transactions, pointsAdj, pointsNonAdj);
 
 
     function uploadFile() {
@@ -62,7 +62,7 @@
     function generateUrl() {
         let url = 'http://127.0.0.1:5000/effort-estimator?';
 
-        url = url.concat('&lenght=', arrayVars[0].value);
+        url = url.concat('&length=', arrayVars[0].value);
         url = url.concat('&noEntities=', arrayVars[1].value);
         url = url.concat('&noTransactions=', arrayVars[2].value);
         url = url.concat('&adjPoints=', arrayVars[3].value);

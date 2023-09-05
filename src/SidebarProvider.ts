@@ -85,14 +85,14 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 				<link href="${styleVSCodeUri}" rel="stylesheet">
 			</head>
       <body>
-        <input id="lenght" type="number" placeholder="Lenght"/>
+        <input id="length" type="number" placeholder="Length"/>
         <input id="entities" type="number" placeholder="No. entities"/>
         <input id="transactions" type="number" placeholder="No. transactions"/>
         <input id="pointsAdj" type="number" placeholder="Adjusted points"/>
         <input id="pointsNonAdj" type="number" placeholder="Non adjusted points"/>
-    
+
         <button id="computeEffortBtn">Compute effort</button>
-      
+
         <p>or</p>
         <input id="fileInput" style="display:none" type="file" accept=".csv" hidden/>
         <button id="uploadFileBtn">Upload file</button>
